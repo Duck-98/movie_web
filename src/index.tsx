@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
 import { legacy_createStore as createStore } from "redux";
 import rootReducer from "./modules/reducers/index";
-import configureStore from "./modules/store/configureStore";
 
 const store = createStore(rootReducer);
 

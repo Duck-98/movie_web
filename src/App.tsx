@@ -1,30 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { fetchPokemonData } from "./modules/actions/PokemonAction";
 import { RootReducerType } from "./modules/store/configureStore";
-import "../App.css";
-import Header from "../src/components/Header";
-import Movie from "../src/components/Movie";
-import Search from "../src/components/Search";
-const MOVIE_API_URL = "https://www.omdbapi.com/?s=man&apikey=4a3b711b";
 
 const App = () => {
-  const { movies, loading, errorMessage } = useSelector(
-    (state: RootReducerType) => state.movieReducer,
+  const { pokemon, success } = useSelector(
+    (state: RootReducerType) => state.PokemonReducer,
   );
+  const dispatch = useDispatch();
+  const [pokemonName, setPokemonName] = useState("");
+  const handlePokemonName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPokemonName(e.target.value);
+  };
+
+  const handleSearch = () => {
+    dispatch(fetchPokemonData(pokemonName));
+  };
   return (
     <div className="App">
-      <Header text="HOOKED" />
-      <Search search={search} />
-      <p className="App-intro">Sharing a few of our favourite movies</p>
-      <div className="movies">
-        {loading && !errorMessage ? (
-          <span>loading... </span>
-        ) : errorMessage ? (
-          <div className="errorMessage">{errorMessage}</div>
-        ) : (
-          movies.map((movie, index) => (
-            <Movie key={`${index}-${movie.Title}`} movie={movie} />
-          ))
+      <input value={pokemonName} onChange={handlePokemonName} />
+      <button onClick={handleSearch}>포켓몬 검색</button>
+      <div>
+        {success && (
+          <div>
+            xw
+            <h1>{pokemonName}</h1>
+            {pokemon?.abilities.map((ability) => {
+              return (
+                <div>
+                  <p>{ability.ability.name}</p>
+                  <p>{ability.slot}</p>
+                </div>
+              );
+            })}
+            <img src={pokemon?.sprites.front_default} alt="pokemon" />
+          </div>
         )}
       </div>
     </div>
@@ -32,46 +43,3 @@ const App = () => {
 };
 
 export default App;
-
-/*
-const [state, dispatch] = useReducer(reducer, initialState);
-
-    useEffect(() => {
-    
-        fetch(MOVIE_API_URL)
-            .then(response => response.json())
-            .then(jsonResponse => {
-        
-            dispatch({
-                type: "SEARCH_MOVIES_SUCCESS",
-                payload: jsonResponse.Search
-        	});
-      	});
-  	}, []);
-
-    const search = searchValue => {
-    	dispatch({
-      	type: "SEARCH_MOVIES_REQUEST"
-    	});
-	
-        fetch(`https://www.omdbapi.com/?s=${searchValue}&apikey=4a3b711b`)
-      	.then(response => response.json())
-      	.then(jsonResponse => {
-        	if (jsonResponse.Response === "True") {
-          	dispatch({
-                type: "SEARCH_MOVIES_SUCCESS",
-                payload: jsonResponse.Search
-          	});
-        	} else {
-          	dispatch({
-                type: "SEARCH_MOVIES_FAILURE",
-                error: jsonResponse.Error
-          	});
-          }
-      	});
-	  };
-
-    const { movies, errorMessage, loading } = state;
-
-
-*/

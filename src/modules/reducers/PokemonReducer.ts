@@ -1,37 +1,37 @@
-import { MovieActionTypes, moviesType } from "../actions/movieActionTypes";
+import { PokemonActionTypes, PokemonType } from "../actions/PokemonActionTypes";
 interface initialStateType {
   loading: boolean;
   success: boolean;
-  movies?: moviesType[];
+  pokemon?: PokemonType;
   errorMessage: null;
 }
 const initialState: initialStateType = {
   loading: true,
   success: false,
-  movies: [],
   errorMessage: null,
 };
 
-export const movieReducer = (
+export const PokemonReducer = (
   state = initialState,
-  action: MovieActionTypes,
+  action: PokemonActionTypes,
 ): initialStateType => {
   switch (action.type) {
-    case "SEARCH_MOVIES_REQUEST":
+    case "SEARCH_POKEMON_REQUEST":
       return {
         ...state,
         loading: true,
         success: false,
         errorMessage: null,
       };
-    case "SEARCH_MOVIES_SUCCESS":
+    case "SEARCH_POKEMON_SUCCESS":
+      const { sprites, abilities } = action.payload;
       return {
         ...state,
         loading: false,
         success: true,
-        movies: action.payload,
+        pokemon: { abilities, sprites },
       };
-    case "SEARCH_MOVIES_FAILURE":
+    case "SEARCH_POKEMON_FAILURE":
       return {
         ...state,
         loading: false,
